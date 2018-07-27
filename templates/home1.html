@@ -1,0 +1,621 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,
+    initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <link rel="icon" href="../../../../favicon.ico">
+  <title>Classification Models</title>
+  <link rel="stylesheet" href="/static/css/bootstrap.min.css" crossorigin="anonymous">
+  <script src="/static/js/bootstrap.min.js" crossorigin="anonymous"></script>
+
+  <!-- Bootstrap core CSS -->
+  <link href="../../dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Custom styles for this template -->
+  <link href="pricing.css" rel="stylesheet">
+  <link href="/static/tabs.css" rel="stylesheet">
+</head>
+
+<body>
+
+  <!-- <div class="d-flex flex-column flex-md-row align-items-center
+  p-3 px-md-4 mb-3 bg-white border-bottom box-shadow">
+
+    <!--<nav class="my-2 my-md-0 mr-md-2 text-left">-->
+ <!--<a class="navbar-brand" href="/">-->
+          <!--<img class="logo"  width="50" height="50" src="static/img/logo.png" alt="">-->
+      <!--</a>-->
+    <!--</nav>-->
+
+      <!-- <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+      <a class="navbar-brand" href="/">
+          <img class="logo"  width="auto" height="50" src="static/img/logo.png" alt="">
+      </a>
+      <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+        <ul class="navbar-nav mr-auto">
+        </ul>
+          <li>
+            <a class="btn btn-outline-success my-2 my-sm-0" href="#">About</a>
+          </li> -->
+          <!-- <li>
+              <a class="btn btn-outline-success my-2 my-sm-0" href="/Profile" >Profile</a>
+            </li> -->
+          <!-- <li class="nav-item">
+          <a class="btn btn-outline-success my-2 my-sm-0"  href="/logout" >Logout</a>
+          </li> -->
+          <header>
+              <!-- Fixed navbar -->
+              <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+                <a class="navbar-brand" href="#">Fixed navbar</a>
+                <button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse" id="navbarCollapse" style="">
+                  <ul class="navbar-nav mr-auto">
+                    <li class="nav-item active">
+                      <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="#">Link</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link disabled" href="#">Disabled</a>
+                    </li>
+                  </ul>
+                  <form class="form-inline mt-2 mt-md-0">
+                    <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
+                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                  </form>
+                </div>
+              </nav>
+            </header>
+
+  <!-- <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto">
+    <h1 class="display-4 text-center">Health Prediction Machine Learning Model</h1>
+  </div> -->
+
+  <div class="container">
+    <div class="text-center">
+      <div class="card box-shadow">
+        <div class="card-header">
+          <div class="btn-group btn-group-lg" role="group">
+            <button class="btn-default btn-lg" onclick="openTab(event, 'Health')">Heart Disease Prediction</button>
+            <button class="btn-default btn-lg" onclick="openTab(event, 'Disease')">Symptom Disease Prediction </button>
+            <button class="btn-default btn-lg" onclick="openTab(event, 'Diet')">Diet Advice</button>
+          </div>
+        </div>
+      </div>
+
+                    <div class="alert alert-light" role="alert" id="result_screen">
+                        {% if heart_status != ''%}
+                            <h4 class="text-white bg-dark">{{heart_status}}</h4>
+                        {%endif%}
+
+                        {% if bmi_status != ''%}
+                            <h4 class="text-white bg-dark text-left">{{bmi_status | safe}}</h4>
+                        {%endif%}
+
+                         {% if pred_disease != ''%}
+                        <h4 class="text-white bg-dark">{{pred_disease}}</h4>
+                        {%endif%}
+                    </div>
+
+
+      <div id="Health" class="tabcontent">
+        <div class="row">
+          <div class="col-md-3"></div>
+          <div class="col-md-6">
+            <div class="card box-shadow">
+              <div class="card-header">
+                <h4 class="my-0 font-weight-normal">Heart Disease Prediction </h4>
+              </div>
+              <div class="card-body">
+                <form action="/" method="post">
+                  <div class="form-group row">
+                    <label for="age" class="col-sm-4 col-form-label text-left">Age</label>
+                    <div class="col-sm-8">
+                      <input type="number" class="form-control" name="age" id="age" placeholder="Age" required>
+                    </div>
+                  </div>
+                  <hr>
+                  <div class="row form-group">
+                    <label class="col-sm-4 col-form-label text-left">Sex</label>
+                    <div class="custom-control custom-radio custom-control-inline">
+                      <input type="radio" id="sex_male" name="sex" value="1" class="custom-control-input" checked>
+                      <label class="custom-control-label" for="sex_male">Male</label>
+                    </div>
+                    <div class="custom-control custom-radio custom-control-inline">
+                      <input type="radio" id="sex_female" name="sex" value="0" class="custom-control-input">
+                      <label class="custom-control-label" for="sex_female">Female</label>
+                    </div>
+                  </div>
+                  <hr>
+                  <div class="row form-group">
+                    <label class="col-sm-4 col-form-label text-left">Chest Pain Type</label>
+                    <div class="col-sm-8 text-left">
+                      <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" id="typical_angina" name="chest_pain_type" value="1"
+                               class="custom-control-input" checked >
+                        <label class="custom-control-label" for="typical_angina">Typical Angina</label>
+                      </div>
+                      <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" id="Atypical_angina" name="chest_pain_type" value="2"
+                               class="custom-control-input">
+                        <label class="custom-control-label" for="Atypical_angina">Atypical Angina</label>
+                      </div>
+                      <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" id="non_angina" name="chest_pain_type" value="3"
+                               class="custom-control-input">
+                        <label class="custom-control-label" for="non_angina">Non-Angina</label>
+                      </div>
+                      <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" id="asymptomatic" name="chest_pain_type" value="4"
+                               class="custom-control-input">
+                        <label class="custom-control-label" for="asymptomatic">Asymptomatic</label>
+                      </div>
+                    </div>
+                  </div>
+                  <hr>
+                  <div class="form-group row">
+                    <label for="resting_BP" class="col-sm-4 col-form-label text-left">Resting Blood Pressure (mmHg) </label>
+                    <div class="col-sm-8">
+                      <input type="number" class="form-control" id="resting_BP" name="resting_BP" step="any"
+                             placeholder="Resting Blood Pressure" required>
+                    </div>
+                  </div>
+                  <hr>
+                  <div class="form-group row">
+                    <label for="Serum_cholesterol" class="col-sm-4 col-form-label text-left">Serum cholesterol (mg/dl) </label>
+                    <div class="col-sm-8">
+                      <input type="number" class="form-control" id="Serum_cholesterol" step="any"
+                             name="serum_cholesterol" placeholder="Serum cholesterol" required>
+                    </div>
+                  </div>
+                  <hr>
+                  <div class="form-group row">
+                    <label for="Fasting_Blood_Sugar" class="col-sm-4 col-form-label text-left">Fasting Blood Sugar (mg/dl) </label>
+                    <div class="col-sm-8">
+                      <input type="number" class="form-control" id="Fasting_Blood_Sugar" step="any"
+                             name="fasting_blood_sugar" placeholder="Fasting Blood Sugar" required>
+                    </div>
+                  </div>
+                  <hr>
+                  <div class="row form-group">
+                    <label class="col-sm-4 col-form-label text-left">Resting ECG Results</label>
+                    <div class="col-sm-8 text-left">
+                      <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" id="normal" name="resting_ECG_results" value="0"
+                               class="custom-control-input" checked>
+                        <label class="custom-control-label" for="normal">Normal</label>
+                      </div>
+                      <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" id="ST-T_abnormal" name="resting_ECG_results" value="1"
+                               class="custom-control-input">
+                        <label class="custom-control-label" for="ST-T_abnormal">
+                          ST-T wave abnormality
+                          <br> (T-wave inversion and/or
+                          <br> ST elevation/depression of > 0.05 mv)
+                        </label>
+                      </div>
+                      <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" id="probable_hypertrophy"  value="2"
+                               name="resting_ECG_results" class="custom-control-input">
+                        <label class="custom-control-label" for="probable_hypertrophy">
+                          Probable or definite left ventricular hypertrophy by Estes' criteria</label>
+                      </div>
+                    </div>
+                  </div>
+                  <hr>
+                  <div class="form-group row">
+                    <label for="Fasting_Blood_Sugar" class="col-sm-4 col-form-label text-left">Maximum heart rate achieved </label>
+                    <div class="col-sm-8">
+                      <input type="number" class="form-control" id="heart_rate_achieved" step="any"
+                             name="heart_rate_achieved" placeholder="Maximum heart rate achieved" required>
+                    </div>
+                  </div>
+                  <hr>
+                  <div class="row form-group">
+                    <label class="col-sm-4 col-form-label text-left">Exercise Induced Angina</label>
+                    <div class="custom-control custom-radio custom-control-inline">
+                      <input type="radio" id="Induced_Angina_Yes" name="exercise_induced_angina" value="1"
+                             class="custom-control-input" checked>
+                      <label class="custom-control-label" for="Induced_Angina_Yes">Yes</label>
+                    </div>
+                    <div class="custom-control custom-radio custom-control-inline">
+                      <input type="radio" id="Induced_Angina_No" name="exercise_induced_angina" value="2"
+                             class="custom-control-input">
+                      <label class="custom-control-label" for="Induced_Angina_No">No</label>
+                    </div>
+                  </div>
+                  <hr>
+                  <div class="form-group row">
+                    <label for="ST-Depression" class="col-sm-4 col-form-label text-left">
+                      ST Depression Induced by Exercise Relative to Rest </label>
+                    <div class="col-sm-8">
+                      <input type="number" class="form-control" id="ST-Depression" step="any"
+                             name="ST-depression" placeholder="ST Depression Induced by Exercise" required>
+                    </div>
+                  </div>
+                  <hr>
+                  <div class="row form-group">
+                    <label class="col-sm-4 col-form-label text-left">
+                      Slope of the peak exercise ST segment</label>
+                    <div class="custom-control custom-radio custom-control-inline">
+                      <input type="radio" id="Upslooping" value="1" name="slope_ST_segment"
+                             class="custom-control-input" checked>
+                      <label class="custom-control-label" for="Upslooping">Upslooping</label>
+                    </div>
+                    <div class="custom-control custom-radio custom-control-inline">
+                      <input type="radio" id="Flat" value="2" name="slope_ST_segment" class="custom-control-input">
+                      <label class="custom-control-label" for="Flat">Flat</label>
+                    </div>
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" id="Downslooping" value="3" name="slope_ST_segment" class="custom-control-input">
+                        <label class="custom-control-label" for="Downslooping">Downslooping</label>
+                      </div>
+                  </div>
+                  <hr>
+                  <div class="row form-group">
+                    <label class="col-sm-4 col-form-label text-left">
+                        Number of Major Vessels Colored by Fluoroscopy</label>
+                    <div class="custom-control custom-radio custom-control-inline">
+                      <input type="radio" id="vessel_0" name="number_of_vessels" value="0" class="custom-control-input" checked>
+                      <label class="custom-control-label" for="vessel_0">0</label>
+                    </div>
+                    <div class="custom-control custom-radio custom-control-inline">
+                      <input type="radio" id="vessel_1" name="number_of_vessels" value="1" class="custom-control-input">
+                      <label class="custom-control-label" for="vessel_1">1</label>
+                    </div>
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" id="vessel_2" name="number_of_vessels" value="2" class="custom-control-input">
+                        <label class="custom-control-label" for="vessel_2">2</label>
+                      </div>
+                      <div class="custom-control custom-radio custom-control-inline">
+                          <input type="radio" id="vessel_3" name="number_of_vessels" value="3" class="custom-control-input">
+                          <label class="custom-control-label" for="vessel_3">3</label>
+                        </div>
+                  </div>
+                  <hr>
+                  <div class="row form-group">
+                      <label class="col-sm-4 col-form-label text-left">
+                          Thallium Heart Scan</label>
+                          <div class="col-md-8 text-left">
+                              <div class="custom-control custom-radio custom-control-inline">
+                                  <input type="radio" id="heart_normal" name="thallium_heart_scan" value="3"
+                                         class="custom-control-input" checked>
+                                  <label class="custom-control-label" for="heart_normal">Normal </label>
+                                </div>
+                                <div class="custom-control custom-radio custom-control-inline">
+                                  <input type="radio" id="heart_fixed_defect" name="thallium_heart_scan"
+                                         value="6" class="custom-control-input">
+                                  <label class="custom-control-label" for="heart_fixed_defect">Fixed Defect</label>
+                                </div>
+                                <div class="custom-control custom-radio custom-control-inline">
+                                    <input type="radio" id="heart_reversible_defect" name="thallium_heart_scan"
+                                           value="7" class="custom-control-input">
+                                    <label class="custom-control-label" for="heart_reversible_defect">Reversible Defect</label>
+                                  </div>
+                          </div>
+                    </div>
+                  <div class="form-group row">
+                    <div class="col-sm-10">
+                      <button type="submit" class="btn btn-success">Predict</button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <div id="Disease" class="tabcontent">
+        <div class="card mb-4 box-shadow">
+          <div class="card-header">
+            <h4 class="my-0 font-weight-normal">Symptom Disease Prediction</h4>
+          </div>
+          <div class="card-body">
+               <form action="/" method="post">
+                   <div class="row">
+                       <div class="custom-control custom-checkbox col-md-2">
+                    <input type="text" class="custom-control-input" id="hid" name="disease_symptom" hidden aria-hidden="true">
+                 </div>
+                 </div>
+             <div class="row form-group">
+                 <div class="custom-control custom-checkbox col-md-2">
+                    <input type="checkbox" class="custom-control-input" id="abdomen acute" name="abdomen acute" value="1">
+                     <label class="custom-control-label" for="abdomen acute">abdomen acute</label>
+                 </div>
+                 <div class="custom-control custom-checkbox col-md-2">
+                    <input type="checkbox" class="custom-control-input" id="abnormally hard consistency" name="abnormally hard consistency" value="1">
+                     <label class="custom-control-label" for="abnormally hard consistency">abnormally hard consistency</label>
+                 </div>
+                 <div class="custom-control custom-checkbox col-md-2">
+                    <input type="checkbox" class="custom-control-input" id="abscess bacterial" name="abscess bacterial" value="1">
+                     <label class="custom-control-label" for="abscess bacterial">abscess bacterial</label>
+                 </div>
+                 <div class="custom-control custom-checkbox col-md-2">
+                    <input type="checkbox" class="custom-control-input" id="agitation" name="agitation" value="1">
+                     <label class="custom-control-label" for="agitation">agitation</label>
+                 </div>
+                 <div class="custom-control custom-checkbox col-md-2">
+                    <input type="checkbox" class="custom-control-input" id="angina pectoris" name="angina pectoris" value="1">
+                     <label class="custom-control-label" for="angina pectoris">angina pectoris</label>
+                 </div>
+                 <div class="custom-control custom-checkbox col-md-2">
+                    <input type="checkbox" class="custom-control-input" id="apyrexial" name="apyrexial" value="1">
+                     <label class="custom-control-label" for="apyrexial">apyrexial</label>
+                 </div>
+
+             </div>
+                 <hr> <div class="row form-group">
+                 <div class="custom-control custom-checkbox col-md-2">
+                    <input type="checkbox" class="custom-control-input" id="arthralgia" name="arthralgia" value="1">
+                     <label class="custom-control-label" for="arthralgia">arthralgia</label>
+                 </div>
+                 <div class="custom-control custom-checkbox col-md-2">
+                    <input type="checkbox" class="custom-control-input" id="asthenia" name="asthenia" value="1">
+                     <label class="custom-control-label" for="asthenia">asthenia</label>
+                 </div>
+                 <div class="custom-control custom-checkbox col-md-2">
+                    <input type="checkbox" class="custom-control-input" id="breath sounds decreased" name="breath sounds decreased" value="1">
+                     <label class="custom-control-label" for="breath sounds decreased">breath sounds decreased</label>
+                 </div>
+                 <div class="custom-control custom-checkbox col-md-2">
+                    <input type="checkbox" class="custom-control-input" id="cardiovascular event" name="cardiovascular event" value="1">
+                     <label class="custom-control-label" for="cardiovascular event">cardiovascular event</label>
+                 </div>
+                 <div class="custom-control custom-checkbox col-md-2">
+                    <input type="checkbox" class="custom-control-input" id="chest tightness" name="chest tightness" value="1">
+                     <label class="custom-control-label" for="chest tightness">chest tightness</label>
+                 </div>
+                 <div class="custom-control custom-checkbox col-md-2">
+                    <input type="checkbox" class="custom-control-input" id="cough" name="cough" value="1">
+                     <label class="custom-control-label" for="cough">cough</label>
+                 </div>
+
+             </div>
+                 <hr><div class="row form-group">
+                 <div class="custom-control custom-checkbox col-md-2">
+                    <input type="checkbox" class="custom-control-input" id="decreased body weight" name="decreased body weight" value="1">
+                     <label class="custom-control-label" for="decreased body weight">decreased body weight</label>
+                 </div>
+                 <div class="custom-control custom-checkbox col-md-2">
+                    <input type="checkbox" class="custom-control-input" id="diarrhea" name="diarrhea" value="1">
+                     <label class="custom-control-label" for="diarrhea">diarrhea</label>
+                 </div>
+                 <div class="custom-control custom-checkbox col-md-2">
+                    <input type="checkbox" class="custom-control-input" id="difficulty passing urine" name="difficulty passing urine" value="1">
+                     <label class="custom-control-label" for="difficulty passing urine">difficulty passing urine</label>
+                 </div>
+                 <div class="custom-control custom-checkbox col-md-2">
+                    <input type="checkbox" class="custom-control-input" id="distress respiratory" name="distress respiratory" value="1">
+                     <label class="custom-control-label" for="distress respiratory">distress respiratory</label>
+                 </div>
+                 <div class="custom-control custom-checkbox col-md-2">
+                    <input type="checkbox" class="custom-control-input" id="dizziness" name="dizziness" value="1">
+                     <label class="custom-control-label" for="dizziness">dizziness</label>
+                 </div>
+                 <div class="custom-control custom-checkbox col-md-2">
+                    <input type="checkbox" class="custom-control-input" id="drowsiness" name="drowsiness" value="1">
+                     <label class="custom-control-label" for="drowsiness">drowsiness</label>
+                 </div>
+
+             </div>
+                 <hr> <div class="row form-group">
+                 <div class="custom-control custom-checkbox col-md-2">
+                    <input type="checkbox" class="custom-control-input" id="facial paresis" name="facial paresis" value="1">
+                     <label class="custom-control-label" for="facial paresis">facial paresis</label>
+                 </div>
+                 <div class="custom-control custom-checkbox col-md-2">
+                    <input type="checkbox" class="custom-control-input" id="fatigue" name="fatigue" value="1">
+                     <label class="custom-control-label" for="fatigue">fatigue</label>
+                 </div>
+                 <div class="custom-control custom-checkbox col-md-2">
+                    <input type="checkbox" class="custom-control-input" id="fever" name="fever" value="1">
+                     <label class="custom-control-label" for="fever">fever</label>
+                 </div>
+                 <div class="custom-control custom-checkbox col-md-2">
+                    <input type="checkbox" class="custom-control-input" id="haemorrhage" name="haemorrhage" value="1">
+                     <label class="custom-control-label" for="haemorrhage">haemorrhage</label>
+                 </div>
+                 <div class="custom-control custom-checkbox col-md-2">
+                    <input type="checkbox" class="custom-control-input" id="muscle twitch" name="muscle twitch" value="1">
+                     <label class="custom-control-label" for="muscle twitch">muscle twitch</label>
+                 </div>
+                 <div class="custom-control custom-checkbox col-md-2">
+                    <input type="checkbox" class="custom-control-input" id="nausea" name="nausea" value="1">
+                     <label class="custom-control-label" for="nausea">nausea</label>
+                 </div>
+
+             </div>
+                 <hr><div class="row form-group">
+                 <div class="custom-control custom-checkbox col-md-2">
+                    <input type="checkbox" class="custom-control-input" id="neck stiffness" name="neck stiffness" value="1">
+                     <label class="custom-control-label" for="neck stiffness">neck stiffness</label>
+                 </div>
+                 <div class="custom-control custom-checkbox col-md-2">
+                    <input type="checkbox" class="custom-control-input" id="pain" name="pain" value="1">
+                     <label class="custom-control-label" for="pain">pain</label>
+                 </div>
+                 <div class="custom-control custom-checkbox col-md-2">
+                    <input type="checkbox" class="custom-control-input" id="pain abdominal" name="pain abdominal" value="1">
+                     <label class="custom-control-label" for="pain abdominal">pain abdominal</label>
+                 </div>
+                 <div class="custom-control custom-checkbox col-md-2">
+                    <input type="checkbox" class="custom-control-input" id="pain chest" name="pain chest" value="1">
+                     <label class="custom-control-label" for="pain chest">pain chest</label>
+                 </div>
+                 <div class="custom-control custom-checkbox col-md-2">
+                    <input type="checkbox" class="custom-control-input" id="paralyse" name="paralyse" value="1">
+                     <label class="custom-control-label" for="paralyse">paralyse</label>
+                 </div>
+                 <div class="custom-control custom-checkbox col-md-2">
+                    <input type="checkbox" class="custom-control-input" id="pin-point pupils" name="pin-point pupils" value="1">
+                     <label class="custom-control-label" for="pin-point pupils">pin-point pupils</label>
+                 </div>
+
+             </div>
+                 <hr> <div class="row form-group">
+                 <div class="custom-control custom-checkbox col-md-2">
+                    <input type="checkbox" class="custom-control-input" id="pleuritic pain" name="pleuritic pain" value="1">
+                     <label class="custom-control-label" for="pleuritic pain">pleuritic pain</label>
+                 </div>
+                 <div class="custom-control custom-checkbox col-md-2">
+                    <input type="checkbox" class="custom-control-input" id="seizure" name="seizure" value="1">
+                     <label class="custom-control-label" for="seizure">seizure</label>
+                 </div>
+                 <div class="custom-control custom-checkbox col-md-2">
+                    <input type="checkbox" class="custom-control-input" id="shortness of breath" name="shortness of breath" value="1">
+                     <label class="custom-control-label" for="shortness of breath">shortness of breath</label>
+                 </div>
+                 <div class="custom-control custom-checkbox col-md-2">
+                    <input type="checkbox" class="custom-control-input" id="sleeplessness" name="sleeplessness" value="1">
+                     <label class="custom-control-label" for="sleeplessness">sleeplessness</label>
+                 </div>
+                 <div class="custom-control custom-checkbox col-md-2">
+                    <input type="checkbox" class="custom-control-input" id="stiffness" name="stiffness" value="1">
+                     <label class="custom-control-label" for="stiffness">stiffness</label>
+                 </div>
+                 <div class="custom-control custom-checkbox col-md-2">
+                    <input type="checkbox" class="custom-control-input" id="swelling" name="swelling" value="1">
+                     <label class="custom-control-label" for="swelling">swelling</label>
+                 </div>
+
+             </div>
+                 <hr><div class="row form-group">
+                 <div class="custom-control custom-checkbox col-md-2">
+                    <input type="checkbox" class="custom-control-input" id="tremor" name="tremor" value="1">
+                     <label class="custom-control-label" for="tremor">tremor</label>
+                 </div>
+                 <div class="custom-control custom-checkbox col-md-2">
+                    <input type="checkbox" class="custom-control-input" id="unresponsiveness" name="unresponsiveness" value="1">
+                     <label class="custom-control-label" for="unresponsiveness">unresponsiveness</label>
+                 </div>
+                 <div class="custom-control custom-checkbox col-md-2">
+                    <input type="checkbox" class="custom-control-input" id="vomiting" name="vomiting" value="1">
+                     <label class="custom-control-label" for="vomiting">vomiting</label>
+                 </div>
+                 <div class="custom-control custom-checkbox col-md-2">
+                    <input type="checkbox" class="custom-control-input" id="wheezing" name="wheezing" value="1">
+                     <label class="custom-control-label" for="wheezing">wheezing</label>
+                 </div>
+                 <div class="custom-control custom-checkbox col-md-2">
+                    <input type="checkbox" class="custom-control-input" id="worry" name="worry" value="1">
+                     <label class="custom-control-label" for="worry">worry</label>
+                 </div>
+                 <div class="custom-control custom-checkbox col-md-2">
+                    <input type="checkbox" class="custom-control-input" id="yellow sputum" name="yellow sputum" value="1">
+                     <label class="custom-control-label" for="yellow sputum">yellow sputum</label>
+                 </div>
+             </div>
+              <div class="form-group row">
+                <div class="col-md-3"></div>
+                <div class="col-md-6">
+                  <button type="submit" class="btn btn-success">Predict</button>
+                </div>
+                 <div class="col-md-3"></div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <div id="Diet" class="tabcontent">
+        <div class="row">
+          <div class="col-md-3"></div>
+          <div class="col-md-6">
+             <div class="card mb-4 box-shadow">
+          <div class="card-header">
+            <h4 class="my-0 font-weight-normal">Diet Advice</h4>
+          </div>
+          <div class="card-body">
+            <form action="/" method="post">
+
+              <div class="form-group row text-left">
+                <label for="height" class="col-sm-3 col-form-label text-left">Height</label>
+                <div class="col-sm-6">
+                  <input type="number" step="any"
+                         class="form-control" id="height" name="height" placeholder="Height" required>
+                </div>
+                <div class="col-sm-3">
+                  <select class="custom-select" name="height_type" id="height_type">
+                      <option value="in" selected>inches</option>
+                      <option value="m">meters</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group row text-left">
+                <label for="weight" class="col-sm-3 col-form-label text-left">weight</label>
+                <div class="col-sm-6">
+                  <input type="number" step="any"
+                         class="form-control" id="weight" name="weight" placeholder="Weight" required>
+                </div>
+                <div class="col-md-3">
+                  <select class="custom-select" name="weight_type" id="weight_type">
+                      <option value="kg" selected>kg</option>
+                      <option value="lb">lb</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group row">
+                <div class="col-md-3"></div>
+                <div class="col-md-6">
+                    <button type="submit" class="btn btn-success">Calculate</button>
+                </div>
+                 <div class="col-md-3"></div>
+              </div>
+            </form>
+          </div>
+        </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <footer class="pt-4 my-md-5 pt-md-5 border-top">
+
+    </footer>
+  </div> -->
+
+
+  <!-- Bootstrap core JavaScript
+    ================================================== -->
+  <!-- Placed at the end of the document so the pages load faster -->
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+    crossorigin="anonymous"></script>
+  <script>
+  window.jQuery || document.write('<script src="../../assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
+  <script src="../../assets/js/vendor/popper.min.js"></script>
+  <script src="../../dist/js/bootstrap.min.js"></script>
+  <script src="../../assets/js/vendor/holder.min.js"></script>
+  <script>
+    Holder.addTheme('thumb', {
+      bg: '#55595c',
+      fg: '#eceeef',
+      text: 'Thumbnail'
+    });
+    function openTab(evt, prediction) {
+      var i, tabcontent, tablinks;
+      tabcontent = document.getElementsByClassName("tabcontent");
+      for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+      }
+      tablinks = document.getElementsByClassName("tablinks");
+      for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+      }
+      document.getElementById(prediction).style.display = "block";
+      evt.currentTarget.className += " active";
+      document.getElementById("result_screen").style.display = "none";
+    }
+  </script>
+</body>
+
+</html>
